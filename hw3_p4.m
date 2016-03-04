@@ -9,19 +9,19 @@ n = 7;
 % need to use syms for symbolic varibles
 syms q_soft q_hard q x 
 
-q_soft = zeros(1:n); % row vector
+q_soft = zeros(1,n); % row vector
 for i = 1:n
     q_soft(i) = i; % maybe add +i to this....  maybe we need numbers?
 end
 
-q_hard = zeros(1:n); % row vector
+q_hard = zeros(1,n); % row vector
 for i = 1:n
    q_hard(i) = 'L'; % maybe add +i to this....
 end
 
 q = q_soft + q_hard; % row vector
 
-x = zeros(1:14); % state vector
+x = zeros(1,14); % state vector
 x(1) = q_hard(1) * cos(q_soft(1));
 x(2) = q_hard(1) * sin(q_soft(1));
 
