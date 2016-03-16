@@ -42,17 +42,22 @@ while x_iter <= 2*n_joints
 end
 
 % Get Jacobian
-jac = qx_jac(q_vec, x_vec);
+J = qx_jac(q_vec, x_vec);
 
 % Check for singularities?  (Maybe necessary)
-if det(jac) == 0
-    error('SINGLUAR MATRIX');
+if det(J) == 0
+    error('SINGLUAR JACOBIAN');
 end
 
 % Set up mass matrix, need to derive from constrained mass matrix
 % using J'.Mx.J
-Mx = eye(n_joints);
+Mx = eye(2*n_joints);
 Mx = Mx * POINT_MASS_CONST;
+
+M = J'*Mx*J;
+
+H = inv(M);  % attempt at inverting M
+pH = pinv(M);  % pseudo-inverse of M
 
 % Set up torque command vector
 t_vec = zeros(1,n_joints);

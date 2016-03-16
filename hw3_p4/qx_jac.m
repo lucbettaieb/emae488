@@ -3,7 +3,7 @@ function [ jac ] = qx_jac( q_vec, x_vec )
 
 % This method needs some work.
 
-DELTA_H = 0.0001;
+DELTA_H = 0.000000001;
 
 jac = zeros(length(x_vec),length(q_vec));
 
