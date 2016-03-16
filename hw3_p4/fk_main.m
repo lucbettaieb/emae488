@@ -1,6 +1,7 @@
 % Luc Bettaieb 2016
 % EMAE 488: Advanced Robotics
 % Forward Kinematics | Main Program
+clear all;
 
 n_joints = 5;
 JOINT_LENGTH_CONST = 1;
@@ -22,19 +23,23 @@ end
 % Set up x_vec based on the q_vec
 % Will be a column vector in the form of x1,y1,...,xn,yn
 x_vec = zeros(1,2*n_joints)';
+s_iter = 1; % iterator for soft variables 
+h_iter = n_joints+1; % iterator for hard variables
 
-s_iter = 1;
-h_iter = n_joints+1;
-x_iter = 1;
-while h_iter <= 2*n_joints-1
-    x_vec(x_iter)   = q_vec(h_iter)*cos(); % x term assignment
-    x_vec(x_iter+1) = q_vec(h_iter)*sin(); % y iterm assignment
+x_iter = 3; % iterator for state operations
+%while h_iter <= 2*n_joints-1
+
+x_vec(1) = 0;
+x_vec(2) = 0;
+
+while x_iter <= 2*n_joints
+    x_vec(x_iter)   = x_vec(x_iter-2) + q_vec(h_iter) * cos(q_sum(q_vec, s_iter)); % x term assignment
+    x_vec(x_iter+1) = x_vec(x_iter-2) + q_vec(h_iter) * sin(q_sum(q_vec, s_iter)); % y iterm assignment
     
     s_iter = s_iter + 1;
     h_iter = h_iter + 1;
     x_iter = x_iter + 2;
 end
-
 
 % Check for singularities?  (Maybe necessary)
 
