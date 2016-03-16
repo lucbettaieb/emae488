@@ -4,11 +4,11 @@
 clear all;
 
 n_joints = 5;
-JOINT_LENGTH_CONST = 1;
-POINT_MASS_CONST = 1;
+JOINT_LENGTH_CONST = 1;  % this will be in meters
+POINT_MASS_CONST = 1;  % this will be in kilograms
 
 % Set up the q_vec to contain joint variables as well as links
-q_vec = zeros(1,2*n_joints-1)';
+q_vec = zeros(1,2*n_joints)';
 
 % Populate the joint position vector with arbitrary initial angles
 for k = 1:n_joints
@@ -16,7 +16,7 @@ for k = 1:n_joints
 end
 
 % Populate hard variables (cheating a bit by making them all the same)
-for k = n_joints+1:2*n_joints-1
+for k = n_joints+1:2*n_joints
     q_vec(k) = JOINT_LENGTH_CONST;
 end
 
@@ -41,8 +41,13 @@ while x_iter <= 2*n_joints
     x_iter = x_iter + 2;
 end
 
-% Check for singularities?  (Maybe necessary)
+% Get Jacobian
+jac = qx_jac(q_vec, x_vec);
 
+% Check for singularities?  (Maybe necessary)
+if det(jac) == 0
+    error('SINGLUAR MATRIX');
+end
 
 % Set up mass matrix, need to derive from constrained mass matrix
 % using J'.Mx.J
