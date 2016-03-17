@@ -62,13 +62,6 @@ M = J'*Mx*J;
 H = inv(M);    % attempt at inverting M
 pH = pinv(M);  % pseudo-inverse of M
 
-% HThTh   = zeros(
-% HThL    = zeros(
-% HLTh    = zeros(
-% HLL     = zeros(
-
-
-
 
 % Set up torque command vector
 t_vec = zeros(1,2*n_joints)';
@@ -77,36 +70,43 @@ for k = 1:n_joints
     t_vec = 2; % applying 2 newtons of force to each joint
 end
 
-% get soft variables from q_vec
-q_pos = q_vec(1:n_joints);
-% set up velocity vector with initial values
-q_vel = zeros(1,n_joints)';
-t = 0;
-h_step = 0.001;
-t_max = 100; % run forward sim for 100 seconds.
+% Was going to run a forward simulation, but not necessary for this
+% assignment
 
-while t <= t_max
-    for k = 1:n_joints
-       q_pos(k) = q_pos(k) + q_vel(k)*h_step; 
-    end
-    t = t+h_step;    
+% % get soft variables from q_vec
+% q_pos = q_vec(1:n_joints);
+% % set up velocity vector with initial values
+% q_vel = zeros(1,n_joints)';
+% t = 0;
+% h_step = 0.001;
+% t_max = 100; % run forward sim for 100 seconds.
+% 
+% while t <= t_max
+%     for k = 1:n_joints
+%        q_pos(k) = q_pos(k) + q_vel(k)*h_step; 
+%     end
+%     
+%     % how do i update q_acc?
+%     t = t+h_step;    
+% end
+
+
+% Set up the velocity vector
+v_vec = zeros(1,2*n_joints)';
+
+for k = 1:n_joints
+    v_vec = 2;
 end
 
+% Set up the gravity vector
+g_vec = zeros(1,2*n_joints)';
 
-% % Set up the velocity vector
-% v_vec = zeros(1,2*n_joints)';
-% 
-% for k = 1:n_joints
-%     v_vec = 2;
-% end
-% 
-% % Set up the gravity vector
-% g_vec = zeros(1,2*n_joints)';
-% 
-% for k = 1:n_joints
-%     g_vec = POINT_MASS_CONST*9.81;
-% end
+for k = 1:n_joints
+    g_vec = POINT_MASS_CONST*9.81;
+end
 
+pseudo_q_acc = pH*(t_vec - v_vec - g_vec)
 
-%q_acc = pH*(t_vec - v_vec - g_vec);
+q_acc = H*(t_vec - v_vec - g_vec)
 
+err = q_acc - pseudo_q_acc
