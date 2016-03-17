@@ -15,8 +15,7 @@ jac = zeros(length(x_vec),length(q_vec));
 
 for i = 1:length(x_vec)
     for j = 1:length(q_vec)
-        jac(i,j) = (1/DELTA_H)*((x_vec(i)+DELTA_H) - q_vec(j));
-    
+        jac(i,j) = (1/DELTA_H)*((x_vec(i)+DELTA_H) - q_vec(j)); 
     end
 end
 
