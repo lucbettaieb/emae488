@@ -56,4 +56,26 @@ for i = 2:n_links+1
     N_vec(:,i) = [0,0,0]';
 end
 
+f_11 = [0,0,0]';
+F_vec(:,n_links) = F_vec(:,n_links) + R_inv_pion4 * f_11;
+
 % Inward iterations
+for i = n_links-1:-1:1
+    
+    % F_vec(:,i) = F_vec(:,n_links) + R_inv_pion4 * F_vec(:,i+1);
+    % N_vec(:,i) = N_vec(:,i) - N_vec(:,i+1) + cross(-p_c_i, F_vec(:,i)) - cross((p_c_i - p_c_i),F_vec(:,i+1));
+
+    % The notes are a little confusing.  They give the following equation
+    % at the end of the "inward iteration" section and it's what the example seems to be using.
+    F_vec(:,i) = R_inv_pion4 * F_vec(:,i+1) + F_vec(:,i);
+    N_vec(:,i) = N_vec(:,i) + R_inv_pion4*N_vec(:,i+1) + cross(p_c_i, F_vec(:,i)) + cross(p_c_i, (R_inv_pion4*F_vec(:,i+1)));
+
+end
+
+torques = zeros(1,n_links);
+
+for i = 1:n_links
+    torques(i) = N_vec(3,i);
+end
+
+torques
